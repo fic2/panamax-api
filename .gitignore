@@ -19,3 +19,6 @@
 /.idea
 /coverage
 *.crt
+
+# Ignore emacs tempfiles
+*~
