@@ -7,6 +7,7 @@ module DockerRunnable
       '/usr/bin/docker run',
       '--rm',
       "--name #{name}",
+      publish_all_flags,
       link_flags,
       port_flags,
       expose_flags,
@@ -70,5 +71,10 @@ module DockerRunnable
     volumes_from.map do |svol|
       "--volumes-from #{svol.exported_from_service_name}"
     end
+  end
+
+  def publish_all_flags
+    return unless publish_all
+    publish_all ? "-P" : ""
   end
 end
