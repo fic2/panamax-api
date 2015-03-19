@@ -47,6 +47,7 @@ class ServicesController < ApplicationController
       :description,
       :type,
       :command,
+      :publish_all,
       categories: [[:id, :position]],
       ports: [[:host_interface, :host_port, :container_port, :proto]],
       expose: [],
