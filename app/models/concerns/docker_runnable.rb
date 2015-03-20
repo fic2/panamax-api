@@ -5,8 +5,9 @@ module DockerRunnable
   def docker_run_string
     [
       '/usr/bin/docker run',
-      '--rm',
+      '--rm=true',
       "--name #{name}",
+      '-t',
       publish_all_flags,
       link_flags,
       port_flags,

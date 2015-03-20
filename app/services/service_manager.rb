@@ -57,17 +57,22 @@ class ServiceManager
       unit_block['Requires'] = dep_services
     end
 
+    #docker_kill_silent = "-/bin/bash -c 'echo \"Killing the container (optional)\" && /usr/bin/docker kill #{service.name} 1>/dev/null 2>&1 || true'"
+    #docker_rm_silent = "-/bin/bash -c 'echo \"Removing the container (optional)\" && /usr/bin/docker rm #{service.name} 1>/dev/null 2>&1 || true'"
+    docker_kill = "-/usr/bin/docker kill #{service.name}"
     docker_rm = "-/usr/bin/docker rm #{service.name}"
-    service_block = {
-      'ExecStartPre' => "-/usr/bin/docker pull #{service.from}",
-      'ExecStart' => service.docker_run_string,
-      'ExecStartPost' => docker_rm,
-      'ExecStop' => "-/usr/bin/docker kill #{service.name}",
-      'ExecStopPost' => docker_rm,
-      'Restart' => 'always',
-      'RestartSec' => '10',
-      'TimeoutStartSec' => '5min'
-    }
+    service_block =
+      [
+       ['ExecStartPre', "/usr/bin/docker pull #{service.from}"],
+       ['ExecStartPre', docker_kill],
+       ['ExecStartPre', docker_rm],
+       ['ExecStart', service.docker_run_string],
+       ['ExecStop', docker_kill],
+       ['ExecStop', docker_rm],
+       ['Restart', 'always'],
+       ['RestartSec', '30s'],
+       ['TimeoutStartSec', '10min']
+      ]
 
     {
       'Unit' => unit_block,
